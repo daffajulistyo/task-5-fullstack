@@ -98,20 +98,19 @@ class ArticleControllerTest extends TestCase
 
     public function testArticleDeletion()
     {
-        // Create a user
+        
         $user = User::create([
             'name' => 'John Doe',
             'email' => 'john@example.com',
             'password' => bcrypt('password'),
         ]);
 
-        // Create a category
+        
         $category = Category::create([
             'name' => 'Category Name',
             'user_id' => $user->id,
         ]);
 
-        // Create an article
         $article = Article::create([
             'title' => 'Test Article',
             'content' => 'This is a test article content.',
@@ -119,20 +118,18 @@ class ArticleControllerTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        // Ensure the article is in the database
+
         $this->assertDatabaseHas('articles', ['id' => $article->id]);
 
-        // Acting as the user
         $this->actingAs($user);
 
-        // Delete the article using the destroy method
+      
         $response = $this->delete(route('articles.destroy', $article->id));
 
-        // Check if the article was deleted successfully
+     
         $response->assertRedirect(route('articles.index'))
                  ->assertSessionHas('success', 'Article deleted successfully.');
 
-        // Ensure the article is no longer in the database
         $this->assertDatabaseMissing('articles', ['id' => $article->id]);
     
     }
